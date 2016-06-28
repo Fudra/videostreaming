@@ -6,12 +6,12 @@ Diese Anwednung wurdim Rahmen es Kurses an der HTW-Berlin entwickelt.
 
 # Benötigt
 
-    php  Version > 5.6 
+    php Version > 5.6 
     php composer
     Apache webserver oder Vagrant umgebung
 
 
 # Installation
 
-    composer Install
+    composer install
     composer dump-autoload -o
