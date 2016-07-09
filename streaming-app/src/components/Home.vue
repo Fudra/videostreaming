@@ -2,7 +2,7 @@
 
     <ul>
         <li v-for="item in list">
-            <a v-link="{ name: 'video' , params:{name: item.video}}">{{item.video}}</a>
+            <a v-link="{ name: 'video' , params:{name: item.video}}">{{item.video}} ({{item.duration}} Sekunden)</a>
         </li>
     </ul>
 
