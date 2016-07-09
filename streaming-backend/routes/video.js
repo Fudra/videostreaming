@@ -8,17 +8,20 @@ router.get('/', function(req, res, next) {
    res.json( {
       "list": [
          {
-            "video": "foo",
-            "length" : "1:22"
+            "video": "Perception.mp4",
          }
       ]
    })
 }) ;
 
 /* stream video*/
-router.get('/stream', function(req, res, next) {
+
+// /stream/foo.mp4
+router.get('/stream/:name', function(req, res, next) {
    res.contentType('flv');
-   var pathToMovie = './res/media/Perception.mp4';
+   var pathToMovie = './res/media/' + req.params.name;
+
+   console.log(pathToMovie);
    var proc = ffmpeg(pathToMovie)
       // preset flashvideo
       .format('flv')

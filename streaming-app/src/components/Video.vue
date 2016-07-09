@@ -2,9 +2,11 @@
 
     <div>
         <video controls width="640" height="360" autoplay class="video-js" preload="auto"  id="video-js">
-            <source  type="video/x-flv" src="http://localhost:3000/api/video/stream">
+            <source  type="video/x-flv" v-bind:src="videourl">
         </video>
     </div>
+
+
 
     <!--application/x-mpegurl-->
 
@@ -19,31 +21,24 @@
     export default {
         data() {
             return {
-                videourl: null
+                videourl: null,
             }
         },
         ready() {
-//            let fp = flowplayer('#flowplyer', {
-//                seekable: true,
-//                src: 'http://localhost:3000/api/video/stream'
-//            });
-            videojs("video-js")
-//            console.log();
-//            let api = flowplayer($(".flowplayer"));//$("#flowplayer:first").data("flowplayer");
-//            api.load(
-//                    {
-//                        sources: [
-//                            {
-//                                type: "video/flv",
-//                                src: 'http://localhost:3000/api/video/stream'
-//                            }
-//                        ]
-//                    }
-//            );
+            let serverUrl = 'http://localhost:3000/api/video/stream/';
+            this.videourl = serverUrl + this.$route.params.name;
 
-//            store.stream().then(response => {
-//                this.videourl = response
-//            });
+            let that = this;
+            setTimeout(()=> {
+                that.play();
+            }, 500);
+
+        },
+        methods: {
+            play() {
+                //e.preventDefault();
+                videojs("video-js");
+            }
         }
     }
 </script>

@@ -16,19 +16,17 @@ Vue.http.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:3000/
 export var router = new VueRouter;
 export default Vue;
 
+Vue.config.devtools = true;
+
 router.map({
    '/': {
       name: 'home',
       component: Home
    },
-   '/video': {
+   '/video/:name': {
       name: 'video',
       component: Video
    },
-   '/video/stream': {
-      name: 'stream',
-      component: Video
-   }
 });
 
 router.start(App, '#app');

@@ -4,7 +4,6 @@
       <nav>
         <ul class="list-inline">
           <li><a v-link="{name: 'home'}">Home</a></li>
-          <li><a v-link="{name: 'video'}">Video</a></li>
         </ul>
       </nav>
     </div>
