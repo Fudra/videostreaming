@@ -22,6 +22,7 @@
         data() {
             return {
                 videourl: null,
+                player: null
             }
         },
         ready() {
@@ -36,9 +37,11 @@
         },
         methods: {
             play() {
-                //e.preventDefault();
-                videojs("video-js");
+                this.player = videojs("video-js");
             }
+        },
+        destroyed() {
+            this.player.dispose();
         }
     }
 </script>
