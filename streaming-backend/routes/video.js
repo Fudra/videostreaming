@@ -5,13 +5,32 @@ var ffmpeg = require('fluent-ffmpeg');
 
 /* get videos list*/
 router.get('/', function(req, res, next) {
-   res.json( {
+
+   var dir = './res/media/';
+   var filesystem = require("fs");
+   var myJson = {};
+   var myList = []
+
+
+   filesystem.readdirSync(dir).forEach(function(file) {
+      if (!file.startsWith('.')) {
+         console.log(file);
+         var temp = {};
+         temp.video = file;
+         myList.push(temp);
+      }
+   });
+
+   myJson.list = myList;
+   console.log(myJson);
+   res.json(myJson)
+   /*res.json( {
       "list": [
          {
             "video": "Perception.mp4",
          }
       ]
-   })
+   })*/
 }) ;
 
 /* stream video*/
