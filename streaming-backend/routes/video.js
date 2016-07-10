@@ -1,54 +1,68 @@
 var express = require('express');
 var router = express.Router();
-var ffmpeg = require('fluent-ffmpeg');
-var ffprobe = require('ffprobe')
-    ,ffprobeStatic = require('ffprobe-static');
+
+var ffmpeg = require('fluent-ffmpeg'),
+   ffprobe = require('ffprobe'),
+   ffprobeStatic = require('ffprobe-static'),
+   getDuration = require('get-video-duration');
+
 var filesystem = require("fs");
-var getDuration = require('get-video-duration');
+var Promise = require("bluebird");
+
+var _ = require('lodash');
 
 
 var dir = './res/media/';
 
 
 /* get videos list*/
-router.get('/', function (req, res, next) {
-    var myJson = {};
-    var myList = [];
+router.get('/', function (request, response, next) {
 
     //check media folder for all files and process them
-    filesystem.readdirSync(dir).forEach(function (file) {
-        if (!file.startsWith('.')) {
-            var temp = {};
+   var readDir = new Promise(function(resolve, reject)  {
+      var myList = [];
+      var promises = [];
 
-            //get informations from video file
-            ffprobe(dir + file, {path: ffprobeStatic.path})
-                .then(function (info) {
-                    var metaInfos = info.streams[0];
-                    if (metaInfos.codec_type == 'video') {
-                        temp.duration = metaInfos.duration;
-                        temp.video = file;
-                        myList.push(temp);
-                    }
-                })
-                .catch(function (err) {
-                    console.error(err);
-                });
-        }
-    });
+      // read all files
+      var files = filesystem.readdirSync(dir);
 
-    //Timeout noch nötig, damit ffprobe nicht erst nach dem return der res fertig ist
-    setTimeout(function() {
-        myJson.list = myList;
-        console.log(myJson);
-        res.json(myJson);
-    }, 300);
-    /*res.json( {
-     "list": [
-     {
-     "video": "Perception.mp4",
-     }
-     ]
-     })*/
+      // remove all files starts with .
+      files = _.remove(files, function(file) {
+        return !file.startsWith('.');
+      });
+
+      files.forEach(function (file) {
+         let temp = {};
+         //get all information from video file
+        var ff = ffprobe(dir + file, {path: ffprobeStatic.path})
+            .then(function (info) {
+               var metaInfos = info.streams[0];
+               if (metaInfos.codec_type == 'video') {
+                  temp.duration = metaInfos.duration;
+                  temp.video = file;
+                  myList.push(temp);
+               }
+            })
+            .catch(function (err) {
+               console.error(err);
+            });
+         promises.push(ff);
+
+      });
+
+      Promise.all(promises).then(function() {
+         resolve(myList);
+      });
+
+   });
+
+   readDir.then(function(list) {
+      let myJson = {};
+      myJson.list = list;
+      console.log('json', myJson);
+      response.json(myJson);
+   });
+
 });
 
 /* stream video*/
@@ -56,7 +70,7 @@ router.get('/', function (req, res, next) {
 // /stream/foo.mp4
 router.get('/stream/:name', function (req, res, next) {
     res.contentType('flv');
-    var pathToMovie = './res/media/' + req.params.name;
+    var pathToMovie = dir + req.params.name;
 
     console.log(pathToMovie);
     var proc = ffmpeg(pathToMovie)
