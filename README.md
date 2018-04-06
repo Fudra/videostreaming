@@ -40,7 +40,7 @@ Es wird eine Webpack Applikation gestartet, die unter der URL `http://localhost:
 Die Applikation ist ein VUEjs anwendung.
 
 ## Hinweis
-Da verschiede  Origins benutzt werden, kann es zu einer `Access-Control-Allow-Origin`  Fehlermeldung kommen.
+Da verschiede Origins benutzt werden, kann es zu einer `Access-Control-Allow-Origin` Fehlermeldung kommen.
 Dazu als Workaround das Plugin CORS für Chrome installieren und bei `Access-Control-Expose-Headers` eine Wildkard `*` setzen.
  
 
